@@ -1,4 +1,4 @@
-package uniandes.centralsimulator.world;
+package uniandes.centralsimulator.alarms.receiver;
 
 import java.io.IOException;
 

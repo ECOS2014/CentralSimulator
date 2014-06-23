@@ -1,13 +1,14 @@
-package uniandes.centralsimulator.world;
+package uniandes.centralsimulator.alarms.cache;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.Hashtable;
 
-public class CentralAlarmEvaluator 
-{
-	private static final String RULES_FILE_PATH = "data/rules.config";
+
+
+public class CentralAlarmEvaluator {
+private static final String RULES_FILE_PATH = "data/rules.config";
 	
 	private static CentralAlarmEvaluator instance;
 	

@@ -1,4 +1,4 @@
-package uniandes.centralsimulator.world;
+package uniandes.centralsimulator.alarms.receiver;
 
 public interface IStoppable 
 {

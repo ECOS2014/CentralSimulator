@@ -1,13 +1,21 @@
-package uniandes.centralsimulator.world;
+package uniandes.centralsimulator.alarms.receiver;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StreamCorruptedException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import uniandes.centralsimulator.alarms.entities.AlarmReceive;
+import uniandes.centralsimulator.alarms.entities.Status;
+import uniandes.centralsimulator.alarms.entities.SystemActive;
+import uniandes.centralsimulator.alarms.entities.TypeNotification;
+import uniandes.centralsimulator.alarms.entities.TypeSensor;
 
 public class CentralMultiThreadServer implements IStoppable
 {
@@ -21,27 +29,27 @@ public class CentralMultiThreadServer implements IStoppable
 	
 	public CentralMultiThreadServer()
 	{
+		byte[] buffer = new byte[4];
 		try
 		{
 			initProperties();
-			//TODO: inicializar cola
+			
 			threadPool = Executors.newCachedThreadPool();
 			threadPool.submit(new ShutDownMonitor(this));
 			server = new ServerSocket(listeningPort);
+			
 			System.out.println("Central server listening on port " + listeningPort);
-			System.out.println("Hit enter to stop the server");
+			
 			while (true)
 			{
-				// Aqui llegan los mensajes de las propiedades
-				//TODO: encolar
+				//llega el mensaje de la casa 
 				Socket socketObject = server.accept();
+				InputStream reader = socketObject.getInputStream();
+				reader.read(buffer);
 				
-				//--------------------------------------------------------
-				
-				System.out.println("Thread created");
-				//TODO: Cambiar, no crear el thread sino obtenerlo de la cola
-				//TODO: Aplicar leader/followers
-				threadPool.submit(new CentralAlarmSolverThread(socketObject));
+				//se encola el mensaje
+				QueueAlarms.getInstance().putEvent(createAlarm(buffer));
+			
 			}
 		}
 		catch (SocketException e)
@@ -52,6 +60,31 @@ public class CentralMultiThreadServer implements IStoppable
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private AlarmReceive createAlarm(byte[] buffer) {
+		
+		AlarmReceive alarm;
+		alarm= new AlarmReceive();
+		char[] bits = new char[8];
+		String idSensor;
+		String idProperty;
+		String verification;
+		
+		idProperty= new String(new byte[]{buffer[0], buffer[1]}).trim();
+		idSensor =  new String(new byte[]{buffer[2]}).trim();  
+		verification = String.format("%8s", Integer.toBinaryString(buffer[3]& 0xFF)).replace(' ', '0'); 
+		//101010101 
+		bits = verification.toCharArray();
+		
+		alarm.setIdProperty(idProperty);
+		alarm.setIdSensor(idSensor);
+		alarm.setStatus(Status.values()[bits[4]]);
+		alarm.setTypeSensor(TypeSensor.values()[bits[5]]);
+		alarm.setSystemActive(SystemActive.values()[bits[6]]);
+		alarm.setTypeNotification(TypeNotification.values()[bits[7]]);
+		
+		return alarm;
 	}
 
 	private void initProperties() 
