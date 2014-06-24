@@ -67,16 +67,18 @@ public class CentralMultiThreadServer implements IStoppable
 		AlarmReceive alarm;
 		alarm= new AlarmReceive();
 		String[] dataBuffer; 
+		String bufferString;
 		
-		dataBuffer = new String(buffer).trim().split(";");
+		bufferString = new String(buffer).trim();
+		dataBuffer =bufferString.split(";");
 		
 		alarm.setIdProperty(dataBuffer[0]);
 		alarm.setIdSensor(dataBuffer[1]);
-		alarm.setStatus(Status.values()[buffer[2]]);
-		alarm.setTypeSensor(TypeSensor.values()[buffer[3]]);
-		alarm.setSystemActive(SystemActive.values()[buffer[4]]);
-		alarm.setTypeNotification(TypeNotification.values()[buffer[5]]);
-		
+		alarm.setStatus(Status.values()[Integer.parseInt(dataBuffer[2])]);
+		alarm.setTypeSensor(TypeSensor.values()[Integer.parseInt(dataBuffer[3])]);
+		alarm.setSystemActive(SystemActive.values()[Integer.parseInt(dataBuffer[4])]);
+		alarm.setTypeNotification(TypeNotification.values()[Integer.parseInt(dataBuffer[5])]);
+		alarm.setStartDate(dataBuffer[6]);
 		return alarm;
 	}
 

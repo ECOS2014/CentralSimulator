@@ -9,6 +9,7 @@ public class AlarmReceive {
 	private Status status;
 	private SystemActive systemActive;
 	private TypeNotification typeNotification;
+	private String startDate;
 	
 	public String getIdSensor() {
 		return idSensor;
@@ -45,6 +46,12 @@ public class AlarmReceive {
 	}
 	public void setTypeNotification(TypeNotification typeNotification) {
 		this.typeNotification = typeNotification;
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String date) {
+		startDate = date;
 	}
 	
 
