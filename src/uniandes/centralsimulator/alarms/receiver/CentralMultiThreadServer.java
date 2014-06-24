@@ -29,7 +29,7 @@ public class CentralMultiThreadServer implements IStoppable
 	
 	public CentralMultiThreadServer()
 	{
-		byte[] buffer = new byte[4];
+		byte[] buffer = new byte[512];
 		try
 		{
 			initProperties();
@@ -66,23 +66,18 @@ public class CentralMultiThreadServer implements IStoppable
 		
 		AlarmReceive alarm;
 		alarm= new AlarmReceive();
-		char[] bits = new char[8];
-		String idSensor;
-		String idProperty;
-		String verification;
+		String[] dataBuffer; 
+		//casa;sensor;status;typesensor;systemActive;typeNotification
 		
-		idProperty= new String(new byte[]{buffer[0], buffer[1]}).trim();
-		idSensor =  new String(new byte[]{buffer[2]}).trim();  
-		verification = String.format("%8s", Integer.toBinaryString(buffer[3]& 0xFF)).replace(' ', '0'); 
-		//101010101 
-		bits = verification.toCharArray();
+		dataBuffer = new String(buffer).trim().split(";");
+
 		
-		alarm.setIdProperty(idProperty);
-		alarm.setIdSensor(idSensor);
-		alarm.setStatus(Status.values()[bits[4]]);
-		alarm.setTypeSensor(TypeSensor.values()[bits[5]]);
-		alarm.setSystemActive(SystemActive.values()[bits[6]]);
-		alarm.setTypeNotification(TypeNotification.values()[bits[7]]);
+		alarm.setIdProperty(dataBuffer[0]);
+		alarm.setIdSensor(dataBuffer[1]);
+		alarm.setStatus(Status.values()[buffer[2]]);
+		alarm.setTypeSensor(TypeSensor.values()[buffer[3]]);
+		alarm.setSystemActive(SystemActive.values()[buffer[4]]);
+		alarm.setTypeNotification(TypeNotification.values()[buffer[5]]);
 		
 		return alarm;
 	}
