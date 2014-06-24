@@ -1,9 +1,7 @@
 package uniandes.centralsimulator.alarms.processor;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import uniandes.centalsimulator.reader.QueueWriter;
 import uniandes.centralsimulator.alarms.actions.FactoryActions;
 import uniandes.centralsimulator.alarms.actions.IAction;
 import uniandes.centralsimulator.alarms.cache.CentralAlarmEvaluator;
@@ -14,23 +12,31 @@ public class ThreadAlarmResolver implements Runnable{
 
 	AlarmReceive alarm;
 	int id;
-
+	long totalMiliseg;
+	long count;
 	public ThreadAlarmResolver(int id) {
 		this.id = id;
 	}
-
+	
+	public void SetNumber(long count){
+		this.count = count;
+	}
 	@Override
 	public void run() {
 		IAction action;
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 		Date currentDate = new Date();
-		String date= df.format(currentDate);
 		
+		String log;
 		if(this.alarm.getTypeNotification().equals(TypeNotification.Alarm)){
 			action = FactoryActions.getInstance().getAcction(CentralAlarmEvaluator.getInstance().getActionToDo(this.alarm.getIdProperty()+"_"+this.alarm.getIdSensor()));
 			action.execute();
 		}
-		System.out.println("atendiendo hilo: "+this.id+ " INICIO CASA: "+this.alarm.getStartDateHome()+ " FIN CASA: "+this.alarm.getEndDateHome() +" INICIO SERVIDOR: "+this.alarm.getStartDateServer() + " FIN SERVER: "+date+" sensor: "+this.alarm.getIdSensor() + " tipo de notificacion: "+this.alarm.getTypeNotification());
+		totalMiliseg = Long.parseLong(this.alarm.getEndDateHome())- Long.parseLong(this.alarm.getStartDateHome())
+				+				currentDate.getTime() - Long.parseLong(this.alarm.getStartDateServer());
+		
+		log = "Hilo: "+this.count +" Total milisengundos: "+ totalMiliseg + " sensor: "+this.alarm.getIdSensor() + " tipo de notificacion: "+this.alarm.getTypeNotification();
+		QueueWriter.getInstance().putEvent(log);
+		
 		AdminThreads.getInstance().putFollower(this); 
 	}
 

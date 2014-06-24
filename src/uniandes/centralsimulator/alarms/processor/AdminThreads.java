@@ -44,11 +44,11 @@ public class AdminThreads {
 		threads.add(alarmResolver);
 	}
 
-	public void runLeader(AlarmReceive alarm) {
+	public void runLeader(AlarmReceive alarm, long threadNumber) {
 		ThreadAlarmResolver alarmResolver;
 		Thread resolver; 
 		alarmResolver =threads.poll();
-
+		alarmResolver.SetNumber(threadNumber);
 		this.validateNumberThreads();
 
 		if(alarmResolver !=null)
