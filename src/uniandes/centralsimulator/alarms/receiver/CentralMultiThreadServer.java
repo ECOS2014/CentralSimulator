@@ -7,6 +7,9 @@ import java.io.StreamCorruptedException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -68,17 +71,22 @@ public class CentralMultiThreadServer implements IStoppable
 		alarm= new AlarmReceive();
 		String[] dataBuffer; 
 		String bufferString;
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+		Date currentDate = new Date();
+		String date= df.format(currentDate);
 		
 		bufferString = new String(buffer).trim();
 		dataBuffer =bufferString.split(";");
-		
+		alarm.setStartDateServer(date);
 		alarm.setIdProperty(dataBuffer[0]);
 		alarm.setIdSensor(dataBuffer[1]);
 		alarm.setStatus(Status.values()[Integer.parseInt(dataBuffer[2])]);
 		alarm.setTypeSensor(TypeSensor.values()[Integer.parseInt(dataBuffer[3])]);
 		alarm.setSystemActive(SystemActive.values()[Integer.parseInt(dataBuffer[4])]);
 		alarm.setTypeNotification(TypeNotification.values()[Integer.parseInt(dataBuffer[5])]);
-		alarm.setStartDate(dataBuffer[6]);
+		alarm.setStartDateHome(dataBuffer[6]);
+		alarm.setEndDateHome(dataBuffer[7]);
+		
 		return alarm;
 	}
 

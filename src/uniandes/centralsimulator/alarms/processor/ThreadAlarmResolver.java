@@ -25,11 +25,12 @@ public class ThreadAlarmResolver implements Runnable{
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 		Date currentDate = new Date();
 		String date= df.format(currentDate);
-		System.out.println( "atendiendo hilo: "+this.id+ " Inicio: "+this.alarm.getStartDate()+ " fin: "+date+" resuelta propiedad: "+this.alarm.getIdProperty() +" sensor: "+this.alarm.getIdSensor() + " tipo de notificación: "+this.alarm.getTypeNotification());
+		
 		if(this.alarm.getTypeNotification().equals(TypeNotification.Alarm)){
 			action = FactoryActions.getInstance().getAcction(CentralAlarmEvaluator.getInstance().getActionToDo(this.alarm.getIdProperty()+"_"+this.alarm.getIdSensor()));
 			action.execute();
 		}
+		System.out.println("atendiendo hilo: "+this.id+ " INICIO CASA: "+this.alarm.getStartDateHome()+ " FIN CASA: "+this.alarm.getEndDateHome() +" INICIO SERVIDOR: "+this.alarm.getStartDateServer() + " FIN SERVER: "+date+" sensor: "+this.alarm.getIdSensor() + " tipo de notificacion: "+this.alarm.getTypeNotification());
 		AdminThreads.getInstance().putFollower(this); 
 	}
 

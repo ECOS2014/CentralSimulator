@@ -9,7 +9,11 @@ public class AlarmReceive {
 	private Status status;
 	private SystemActive systemActive;
 	private TypeNotification typeNotification;
-	private String startDate;
+	private String startDateHome;
+	private String endDateHome;
+	private String startDateServer;
+	
+	
 	
 	public String getIdSensor() {
 		return idSensor;
@@ -47,11 +51,24 @@ public class AlarmReceive {
 	public void setTypeNotification(TypeNotification typeNotification) {
 		this.typeNotification = typeNotification;
 	}
-	public String getStartDate() {
-		return startDate;
+	public String getStartDateHome() {
+		return startDateHome;
 	}
-	public void setStartDate(String date) {
-		startDate = date;
+	public void setStartDateHome(String date) {
+		startDateHome = date;
+	}
+	
+	public String getEndDateHome() {
+		return endDateHome;
+	}
+	public void setEndDateHome(String endDateHome) {
+		this.endDateHome = endDateHome;
+	}
+	public String getStartDateServer() {
+		return startDateServer;
+	}
+	public void setStartDateServer(String startDateServer) {
+		this.startDateServer = startDateServer;
 	}
 	
 
