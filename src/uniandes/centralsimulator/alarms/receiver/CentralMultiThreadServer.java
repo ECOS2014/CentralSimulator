@@ -72,18 +72,20 @@ public class CentralMultiThreadServer implements IStoppable
 		
 		Date currentDate = new Date();
 		
-		
+		//casa;sensor;status;typesensor;systemActive;typeNotification;milisengundo invertidos en la casa
 		bufferString = new String(buffer).trim();
 		dataBuffer =bufferString.split(";");
-		alarm.setStartDateServer(""+currentDate.getTime());
+		
+		alarm.setStartMillisecondsServer(currentDate.getTime());
 		alarm.setIdProperty(dataBuffer[0]);
 		alarm.setIdSensor(dataBuffer[1]);
 		alarm.setStatus(Status.values()[Integer.parseInt(dataBuffer[2])]);
 		alarm.setTypeSensor(TypeSensor.values()[Integer.parseInt(dataBuffer[3])]);
 		alarm.setSystemActive(SystemActive.values()[Integer.parseInt(dataBuffer[4])]);
 		alarm.setTypeNotification(TypeNotification.values()[Integer.parseInt(dataBuffer[5])]);
-		alarm.setStartDateHome(dataBuffer[6]);
-		alarm.setEndDateHome(dataBuffer[7]);
+		alarm.setMillisecondsHome(Long.parseLong(dataBuffer[6]));
+		
+		
 		
 		return alarm;
 	}

@@ -12,7 +12,7 @@ public class ThreadAlarmResolver implements Runnable{
 
 	AlarmReceive alarm;
 	int id;
-	long totalMiliseg;
+	long totalMilliseconds;
 	long count;
 	public ThreadAlarmResolver(int id) {
 		this.id = id;
@@ -24,17 +24,19 @@ public class ThreadAlarmResolver implements Runnable{
 	@Override
 	public void run() {
 		IAction action;
-		Date currentDate = new Date();
-		
+		Date currentDate;
+		String actionName="";
 		String log;
+		currentDate  = new Date();
 		if(this.alarm.getTypeNotification().equals(TypeNotification.Alarm)){
-			action = FactoryActions.getInstance().getAcction(CentralAlarmEvaluator.getInstance().getActionToDo(this.alarm.getIdProperty()+"_"+this.alarm.getIdSensor()));
+			actionName = CentralAlarmEvaluator.getInstance().getActionToDo(this.alarm.getIdProperty()+"_"+this.alarm.getIdSensor());
+			action = FactoryActions.getInstance().getAcction(actionName);
 			action.execute();
 		}
-		totalMiliseg = Long.parseLong(this.alarm.getEndDateHome())- Long.parseLong(this.alarm.getStartDateHome())
-				+				currentDate.getTime() - Long.parseLong(this.alarm.getStartDateServer());
+		totalMilliseconds = (currentDate.getTime() -this.alarm.getStartMillisecondsServer() )+ this.alarm.getMillisecondsHome();  
+				
 		
-		log = "Hilo: "+this.count +" Total milisengundos: "+ totalMiliseg + " sensor: "+this.alarm.getIdSensor() + " tipo de notificacion: "+this.alarm.getTypeNotification();
+		log = "Casa: "+this.alarm.getIdProperty()+" Hilo: "+this.count +" Total milisengundos: "+ totalMilliseconds + " sensor: "+this.alarm.getIdSensor() + " tipo de notificacion: "+this.alarm.getTypeNotification()+" "+actionName;
 		QueueWriter.getInstance().putEvent(log);
 		
 		AdminThreads.getInstance().putFollower(this); 

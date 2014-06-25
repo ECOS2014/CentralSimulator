@@ -9,9 +9,9 @@ public class AlarmReceive {
 	private Status status;
 	private SystemActive systemActive;
 	private TypeNotification typeNotification;
-	private String startDateHome;
-	private String endDateHome;
-	private String startDateServer;
+	
+	private long millisecondsHome;
+	private long startMillisecondsServer;
 	
 	
 	
@@ -51,26 +51,19 @@ public class AlarmReceive {
 	public void setTypeNotification(TypeNotification typeNotification) {
 		this.typeNotification = typeNotification;
 	}
-	public String getStartDateHome() {
-		return startDateHome;
+	public long getMillisecondsHome() {
+		return millisecondsHome;
 	}
-	public void setStartDateHome(String date) {
-		startDateHome = date;
+	public void setMillisecondsHome(long millisecondsHome) {
+		this.millisecondsHome = millisecondsHome;
 	}
-	
-	public String getEndDateHome() {
-		return endDateHome;
+	public long getStartMillisecondsServer() {
+		return startMillisecondsServer;
 	}
-	public void setEndDateHome(String endDateHome) {
-		this.endDateHome = endDateHome;
-	}
-	public String getStartDateServer() {
-		return startDateServer;
-	}
-	public void setStartDateServer(String startDateServer) {
-		this.startDateServer = startDateServer;
+	public void setStartMillisecondsServer(long startMillisecondsServer) {
+		this.startMillisecondsServer = startMillisecondsServer;
 	}
 	
-
+	
 
 }
