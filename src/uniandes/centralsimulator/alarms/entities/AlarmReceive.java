@@ -13,6 +13,32 @@ public class AlarmReceive {
 	private long millisecondsHome;
 	private long startMillisecondsServer;
 	
+	private String startDateHome;
+	private String endDateHome;
+	private String startDateServer;
+	
+	
+	
+	
+	public String getStartDateHome() {
+		return startDateHome;
+	}
+	public void setStartDateHome(String startDateHome) {
+		this.startDateHome = startDateHome;
+	}
+	public String getEndDateHome() {
+		return endDateHome;
+	}
+	public void setEndDateHome(String endDateHome) {
+		this.endDateHome = endDateHome;
+	}
+	public String getStartDateServer() {
+		return startDateServer;
+	}
+	public void setStartDateServer(String startDateServer) {
+		this.startDateServer = startDateServer;
+	}
+	
 	
 	
 	public String getIdSensor() {

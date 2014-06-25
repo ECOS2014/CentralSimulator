@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -69,7 +71,7 @@ public class CentralMultiThreadServer implements IStoppable
 		alarm= new AlarmReceive();
 		String[] dataBuffer; 
 		String bufferString;
-		
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 		Date currentDate = new Date();
 		
 		//casa;sensor;status;typesensor;systemActive;typeNotification;milisengundo invertidos en la casa
@@ -84,6 +86,9 @@ public class CentralMultiThreadServer implements IStoppable
 		alarm.setSystemActive(SystemActive.values()[Integer.parseInt(dataBuffer[4])]);
 		alarm.setTypeNotification(TypeNotification.values()[Integer.parseInt(dataBuffer[5])]);
 		alarm.setMillisecondsHome(Long.parseLong(dataBuffer[6]));
+		alarm.setStartDateHome(dataBuffer[7]);
+		alarm.setEndDateHome(dataBuffer[8]);
+		alarm.setStartDateServer(df.format(currentDate)); 
 		
 		
 		
