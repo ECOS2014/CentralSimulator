@@ -7,12 +7,16 @@ public class AdminWriter implements Runnable, IStoppable{
 	private boolean stop=true;
 	@Override
 	public void run() {
-		String line;
+		String line, milliseconds;
 		Writer writer= new Writer();
 		while(stop){
-			line = QueueWriter.getInstance().getFirstEvent();
+			line = QueueWriter.getInstance().getFirstLine();
+			milliseconds = QueueWriter.getInstance().getFirstMilliseconds();
+			
 			if(line!=null)
-				writer.Write(line);
+				writer.Write(line,"./data/log.txt");
+			if(milliseconds!=null)
+				writer.Write(milliseconds,"./data/logMilliseconds.txt");
 		}
 
 	}

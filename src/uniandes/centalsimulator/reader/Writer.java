@@ -4,13 +4,13 @@ import java.io.FileWriter;
 
 public class Writer  {
 
-	public void Write(String line){
+	public void Write(String line, String filename){
 
 		FileWriter file = null;
 
 		try
 		{
-			file= new FileWriter("./data/log.txt",true);
+			file= new FileWriter(filename,true);
 			file.write(line);
 			file.write("\n");
 		} catch (Exception e) {

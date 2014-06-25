@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class  QueueWriter  {
 	private ConcurrentLinkedQueue<String> lines;
+	private ConcurrentLinkedQueue<String> milliseconds;
 	
 	private static QueueWriter queueAlarms;
 	
@@ -16,19 +17,22 @@ public class  QueueWriter  {
 	
 	private QueueWriter(){
 		lines = new ConcurrentLinkedQueue<String>();
-	}
-	public boolean hasElements() {
-		return !lines.isEmpty();
-	}
-	
-	public void putEvent(String line) {
-		lines.add(line);
+		milliseconds = new ConcurrentLinkedQueue<String>();
 	}
 
-	public String getFirstEvent() {
+	
+	public void putLine(String line, String millisecs) {
+		lines.add(line);
+		milliseconds.add(millisecs);
+	}
+
+	public String getFirstLine() {
 		return lines.poll();
 	}
-
+	
+	public String getFirstMilliseconds() {
+		return milliseconds.poll();
+	}
 }
 
 	
