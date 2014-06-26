@@ -36,14 +36,17 @@ public class ThreadAlarmResolver implements Runnable{
 			action = FactoryActions.getInstance().getAcction(actionName);
 			action.execute();
 		}
-		totalMilliseconds = (currentDate.getTime() -this.alarm.getStartMillisecondsServer() )+ this.alarm.getMillisecondsHome();  
+		
+		long centralMilisegs = (currentDate.getTime() -this.alarm.getStartMillisecondsServer()); 
+		totalMilliseconds = centralMilisegs + this.alarm.getMillisecondsHome();  
 				
 		
 		log = "Casa: "+this.alarm.getIdProperty()+" Hilo: "+this.count +" Total milisegundos: "+ totalMilliseconds + " sensor: "+this.alarm.getIdSensor() + " tipo de notificacion: "+this.alarm.getTypeNotification()+" "+actionName+
 		"CASA INICIO: "+this.alarm.getStartDateHome() +"FIN: "+this.alarm.getEndDateHome()+" SERVIDOR INICIO: "+this.alarm.getStartDateServer() +" FIN: "+df.format(currentDate);
 		
 		System.out.println(log);
-		QueueWriter.getInstance().putLine(log,""+totalMilliseconds);
+				
+		QueueWriter.getInstance().putLine(log,(this.alarm.getMillisecondsHome())+"-"+centralMilisegs+"-"+totalMilliseconds);
 		
 		AdminThreads.getInstance().putFollower(this); 
 	}
