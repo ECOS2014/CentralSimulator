@@ -15,6 +15,10 @@ public class FactoryActions {
 	
 	public IAction getAcction(String typeAction){
 		IAction action =null;
+		if (typeAction==null)
+		{
+			typeAction = "Mail";
+		}
 		if(typeAction.equals("Mail")){
 			action = new Mailer();
 		}else if(typeAction.equals("Message")){
