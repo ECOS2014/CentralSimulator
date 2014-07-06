@@ -38,6 +38,7 @@ public class CentralMultiThreadServer implements IStoppable
 				Socket socketObject = server.accept();
 				Thread propertySensorSocket = new Thread(new CentralPropertySensorListenerThread(socketObject));
 				propertySensorSocket.start();
+				System.out.println("Se ejecuto por el puerto: " + listeningPort);
 			}
 		}
 		catch (SocketException e)

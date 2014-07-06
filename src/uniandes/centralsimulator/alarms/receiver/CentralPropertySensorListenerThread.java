@@ -16,7 +16,7 @@ import uniandes.security.MessageCipher;
 
 public class CentralPropertySensorListenerThread implements Runnable
 {
-	private static final int DEFAULT_PROPERTY_SENSOR_BUFFER_SIZE = 512;
+	private static final int DEFAULT_PROPERTY_SENSOR_BUFFER_SIZE = 1024;
 	private Socket propertySensorSocket;
 	private InputStream propertySensorInputStream;
 	private byte[] propertySensorBuffer;
