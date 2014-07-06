@@ -12,6 +12,7 @@ import uniandes.centralsimulator.alarms.entities.Status;
 import uniandes.centralsimulator.alarms.entities.SystemActive;
 import uniandes.centralsimulator.alarms.entities.TypeNotification;
 import uniandes.centralsimulator.alarms.entities.TypeSensor;
+import uniandes.security.MessageCipher;
 
 public class CentralPropertySensorListenerThread implements Runnable
 {
@@ -41,7 +42,8 @@ public class CentralPropertySensorListenerThread implements Runnable
 		{
 			try
 			{
-				propertySensorInputStream.read(propertySensorBuffer);
+				this.propertySensorBuffer = new byte[DEFAULT_PROPERTY_SENSOR_BUFFER_SIZE];
+				propertySensorInputStream.read(propertySensorBuffer);				
 				QueueAlarms.getInstance().putEvent(createAlarm(propertySensorBuffer));
 			}
 			catch (IOException e)
@@ -62,10 +64,16 @@ public class CentralPropertySensorListenerThread implements Runnable
 		
 		//casa;sensor;status;typesensor;systemActive;typeNotification;milisengundo invertidos en la casa
 		bufferString = new String(buffer).trim();
+			
+		System.out.println("Linea recibida: <" + bufferString + ">");
 		
-		//System.out.println("Linea recibida: <" + bufferString + ">");
+		MessageCipher ms = new MessageCipher();
+		bufferString = ms.decrypt(bufferString);
+		System.out.println("Linea decifrada: <" + bufferString + ">");
 		
 		dataBuffer =bufferString.split(";");
+		
+		System.out.println("dataBuffer:" + dataBuffer);
 		
 		alarm.setStartMillisecondsServer(currentDate.getTime());
 		alarm.setIdProperty(dataBuffer[0]);
