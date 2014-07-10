@@ -31,29 +31,31 @@ public class ThreadAlarmResolver implements Runnable{
 		String log;
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 		currentDate  = new Date();
-		if(this.alarm.getTypeNotification().equals(TypeNotification.Alarm)){
-			actionName = CentralAlarmEvaluator.getInstance().getActionToDo(this.alarm.getIdProperty()+"_"+this.alarm.getIdSensor());
-			action = FactoryActions.getInstance().getAcction(actionName);
-			action.execute();
-		}
-		
-		long centralMilisegs = (currentDate.getTime() -this.alarm.getStartMillisecondsServer()); 
-		totalMilliseconds = centralMilisegs + this.alarm.getMillisecondsHome();  
-				
-		
-		log = "Casa: "+this.alarm.getIdProperty()+" Hilo: "+this.count +" Total milisegundos: "+ totalMilliseconds + " sensor: "+this.alarm.getIdSensor() + " tipo de notificacion: "+this.alarm.getTypeNotification()+" "+actionName+
-		"CASA INICIO: "+this.alarm.getStartDateHome() +"FIN: "+this.alarm.getEndDateHome()+" SERVIDOR INICIO: "+this.alarm.getStartDateServer() +" FIN: "+df.format(currentDate);
-		
-		//System.out.println(log);
-				
-		QueueWriter.getInstance().putLine(log,(this.alarm.getMillisecondsHome())+"-"+centralMilisegs+"-"+totalMilliseconds);
-		
-		AdminThreads.getInstance().putFollower(this); 
+		if (alarm != null)
+		{
+			if(this.alarm.getTypeNotification().equals(TypeNotification.Alarm)){
+				actionName = CentralAlarmEvaluator.getInstance().getActionToDo(this.alarm.getIdProperty()+"_"+this.alarm.getIdSensor());
+				action = FactoryActions.getInstance().getAcction(actionName);
+				action.execute();
+			}
+			
+			long centralMilisegs = (currentDate.getTime() -this.alarm.getStartMillisecondsServer()); 
+			totalMilliseconds = centralMilisegs + this.alarm.getMillisecondsHome();  
+					
+			
+			log = "Casa: "+this.alarm.getIdProperty()+" Hilo: "+this.count +" Total milisegundos: "+ totalMilliseconds + " sensor: "+this.alarm.getIdSensor() + " tipo de notificacion: "+this.alarm.getTypeNotification()+" "+actionName+
+			"CASA INICIO: "+this.alarm.getStartDateHome() +"FIN: "+this.alarm.getEndDateHome()+" SERVIDOR INICIO: "+this.alarm.getStartDateServer() +" FIN: "+df.format(currentDate);
+			
+			//System.out.println(log);
+					
+			QueueWriter.getInstance().putLine(log,(this.alarm.getMillisecondsHome())+"-"+centralMilisegs+"-"+totalMilliseconds);
+			
+			AdminThreads.getInstance().putFollower(this);
+		}		 
 	}
 
-
-	public void setAlarm(AlarmReceive alarm){
+	public void setAlarm(AlarmReceive alarm)
+	{
 		this.alarm = alarm; 		
 	}
-
 }

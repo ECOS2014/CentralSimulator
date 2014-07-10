@@ -12,6 +12,7 @@ import uniandes.centralsimulator.alarms.entities.Status;
 import uniandes.centralsimulator.alarms.entities.SystemActive;
 import uniandes.centralsimulator.alarms.entities.TypeNotification;
 import uniandes.centralsimulator.alarms.entities.TypeSensor;
+import uniandes.security.MessageChecker;
 import uniandes.security.MessageCipher;
 
 public class CentralPropertySensorListenerThread implements Runnable
@@ -73,20 +74,46 @@ public class CentralPropertySensorListenerThread implements Runnable
 		
 		dataBuffer =bufferString.split(";");
 		
-		System.out.println("dataBuffer:" + dataBuffer);
+		System.out.println("dataBuffer: " + dataBuffer.length);
 		
-		alarm.setStartMillisecondsServer(currentDate.getTime());
-		alarm.setIdProperty(dataBuffer[0]);
-		alarm.setIdSensor(dataBuffer[1]);
-		alarm.setStatus(Status.values()[Integer.parseInt(dataBuffer[2])]);
-		alarm.setTypeSensor(TypeSensor.values()[Integer.parseInt(dataBuffer[3])]);
-		alarm.setSystemActive(SystemActive.values()[Integer.parseInt(dataBuffer[4])]);
-		alarm.setTypeNotification(TypeNotification.values()[Integer.parseInt(dataBuffer[5])]);
-		alarm.setMillisecondsHome(Long.parseLong(dataBuffer[6]));
-		alarm.setStartDateHome(dataBuffer[7]);
-		alarm.setEndDateHome(dataBuffer[8]);
-		alarm.setStartDateServer(df.format(currentDate)); 
+		String hash = dataBuffer[9];
+		if (isValidHash(dataBuffer, bufferString))
+		{
+			alarm.setStartMillisecondsServer(currentDate.getTime());
+			alarm.setIdProperty(dataBuffer[0]);
+			alarm.setIdSensor(dataBuffer[1]);
+			alarm.setStatus(Status.values()[Integer.parseInt(dataBuffer[2])]);
+			alarm.setTypeSensor(TypeSensor.values()[Integer.parseInt(dataBuffer[3])]);
+			alarm.setSystemActive(SystemActive.values()[Integer.parseInt(dataBuffer[4])]);
+			alarm.setTypeNotification(TypeNotification.values()[Integer.parseInt(dataBuffer[5])]);
+			alarm.setMillisecondsHome(Long.parseLong(dataBuffer[6]));
+			alarm.setStartDateHome(dataBuffer[7]);
+			alarm.setEndDateHome(dataBuffer[8]);
+			alarm.setStartDateServer(df.format(currentDate));
+		}
+		else
+		{
+			System.out.println("Can't process this shit!");
+			return null;
+		}
 		
 		return alarm;
+	}
+
+	private boolean isValidHash(String[] messageArr, String messageHash) 
+	{
+		String message = messageArr[0] + ";";
+		message += (messageArr[1] + ";");
+		message += (messageArr[2] + ";");
+		message += (messageArr[3] + ";");
+		message += (messageArr[4] + ";");
+		message += (messageArr[5] + ";");
+		message += (messageArr[6] + ";");
+		message += (messageArr[7] + ";");
+		message += messageArr[8];
+		
+		MessageChecker mc = new MessageChecker();
+		//TODO: Cambiar cuando mantenga conexiones
+		return mc.checkHash(messageArr[9], message, null);
 	}
 }
