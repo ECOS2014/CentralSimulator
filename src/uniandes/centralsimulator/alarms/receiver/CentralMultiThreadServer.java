@@ -2,13 +2,14 @@ package uniandes.centralsimulator.alarms.receiver;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import uniandes.centalsimulator.reader.QueueWriter;
 
 public class CentralMultiThreadServer implements IStoppable
 {
@@ -28,6 +29,8 @@ public class CentralMultiThreadServer implements IStoppable
 			
 			threadPool = Executors.newCachedThreadPool();
 			threadPool.submit(new ShutDownMonitor(this));
+			System.out.println("port " + listeningPort);
+			QueueWriter.port = listeningPort;			
 			server = new ServerSocket(listeningPort);
 			
 			System.out.println("Central server listening on port " + listeningPort);

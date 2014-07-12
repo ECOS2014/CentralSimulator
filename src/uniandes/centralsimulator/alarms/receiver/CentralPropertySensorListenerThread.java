@@ -47,7 +47,7 @@ public class CentralPropertySensorListenerThread implements Runnable
 				this.propertySensorBuffer = new byte[DEFAULT_PROPERTY_SENSOR_BUFFER_SIZE];
 				propertySensorInputStream.read(propertySensorBuffer);
 				alarm =createAlarm(propertySensorBuffer);
-				if(alarm !=null)
+				//if(alarm !=null)
 					QueueAlarms.getInstance().putEvent(alarm);
 			}
 			catch (IOException e)
@@ -67,19 +67,12 @@ public class CentralPropertySensorListenerThread implements Runnable
 		Date currentDate = new Date();
 
 		//casa;sensor;status;typesensor;systemActive;typeNotification;milisengundo invertidos en la casa
-		bufferString = new String(buffer).trim();
-
-		System.out.println("Linea recibida: <" + bufferString + ">");
+		bufferString = (new String(buffer).trim()).split(";")[0];
 
 		MessageCipher ms = new MessageCipher();
 		bufferString = ms.decrypt(bufferString);
-		System.out.println("Linea decifrada: <" + bufferString + ">");
-
 		dataBuffer =bufferString.split(";");
 
-		System.out.println("dataBuffer: " + dataBuffer.length);
-
-		String hash = dataBuffer[9];
 		if (isValidHash(dataBuffer, bufferString))
 		{
 			alarm.setStartMillisecondsServer(currentDate.getTime());

@@ -38,7 +38,11 @@ public class MessageChecker
 	{
 		System.out.println("\ncheckHash(messageHash:"+messageHash+", message:"+message+", strKeyDate:"+strKeyDate+")");
 		String hashedMessage = getHash(message, strKeyDate);
+		messageHash = messageHash.trim();
+		hashedMessage = hashedMessage.trim();
 		System.out.println("Local hash: " + hashedMessage + "\n");
-		return hashedMessage.equals(messageHash);
+		boolean isValidHash = hashedMessage.equals(messageHash);
+		System.out.println("Is Valid: ( " + hashedMessage + " == " + messageHash + " ) // " + isValidHash + "\n");
+		return isValidHash;
 	}
 }
