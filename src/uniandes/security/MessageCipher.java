@@ -105,6 +105,7 @@ public class MessageCipher
 		}
 		catch (Exception e)
 		{
+			System.out.println ("ERROR AL CONVERTIR: "+ encryptedMessage);
 			e.printStackTrace();
 		}
 		

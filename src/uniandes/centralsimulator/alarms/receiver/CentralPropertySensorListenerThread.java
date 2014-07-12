@@ -21,7 +21,7 @@ public class CentralPropertySensorListenerThread implements Runnable
 	private Socket propertySensorSocket;
 	private InputStream propertySensorInputStream;
 	private byte[] propertySensorBuffer;
-	
+
 	public CentralPropertySensorListenerThread(Socket propertySensorSocket)
 	{
 		this.propertySensorSocket = propertySensorSocket;
@@ -39,13 +39,16 @@ public class CentralPropertySensorListenerThread implements Runnable
 	@Override
 	public void run() 
 	{
+		AlarmReceive alarm;
 		while(true)
 		{
 			try
 			{
 				this.propertySensorBuffer = new byte[DEFAULT_PROPERTY_SENSOR_BUFFER_SIZE];
-				propertySensorInputStream.read(propertySensorBuffer);				
-				QueueAlarms.getInstance().putEvent(createAlarm(propertySensorBuffer));
+				propertySensorInputStream.read(propertySensorBuffer);
+				alarm =createAlarm(propertySensorBuffer);
+				if(alarm !=null)
+					QueueAlarms.getInstance().putEvent(alarm);
 			}
 			catch (IOException e)
 			{
@@ -53,7 +56,7 @@ public class CentralPropertySensorListenerThread implements Runnable
 			}
 		}
 	}
-	
+
 	private AlarmReceive createAlarm(byte[] buffer) 
 	{		
 		AlarmReceive alarm;
@@ -62,20 +65,20 @@ public class CentralPropertySensorListenerThread implements Runnable
 		String bufferString;
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 		Date currentDate = new Date();
-		
+
 		//casa;sensor;status;typesensor;systemActive;typeNotification;milisengundo invertidos en la casa
 		bufferString = new String(buffer).trim();
-			
+
 		System.out.println("Linea recibida: <" + bufferString + ">");
-		
+
 		MessageCipher ms = new MessageCipher();
 		bufferString = ms.decrypt(bufferString);
 		System.out.println("Linea decifrada: <" + bufferString + ">");
-		
+
 		dataBuffer =bufferString.split(";");
-		
+
 		System.out.println("dataBuffer: " + dataBuffer.length);
-		
+
 		String hash = dataBuffer[9];
 		if (isValidHash(dataBuffer, bufferString))
 		{
@@ -96,7 +99,7 @@ public class CentralPropertySensorListenerThread implements Runnable
 			System.out.println("Can't process this shit!");
 			return null;
 		}
-		
+
 		return alarm;
 	}
 
@@ -111,7 +114,7 @@ public class CentralPropertySensorListenerThread implements Runnable
 		message += (messageArr[6] + ";");
 		message += (messageArr[7] + ";");
 		message += messageArr[8];
-		
+
 		MessageChecker mc = new MessageChecker();
 		//TODO: Cambiar cuando mantenga conexiones
 		return mc.checkHash(messageArr[9], message, null);

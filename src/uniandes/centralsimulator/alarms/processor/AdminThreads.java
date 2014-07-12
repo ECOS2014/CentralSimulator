@@ -66,7 +66,8 @@ public class AdminThreads {
 			resolver.start();
 		}
 
-
+		System.out.println("Queda "+threads.size()+" hilos en cola.");
+		
 	}
 
 	private void validateNumberThreads(){
