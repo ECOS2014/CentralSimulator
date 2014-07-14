@@ -47,7 +47,7 @@ public class CentralPropertySensorListenerThread implements Runnable
 				this.propertySensorBuffer = new byte[DEFAULT_PROPERTY_SENSOR_BUFFER_SIZE];
 				propertySensorInputStream.read(propertySensorBuffer);
 				alarm =createAlarm(propertySensorBuffer);
-				//if(alarm !=null)
+				if(alarm !=null)
 					QueueAlarms.getInstance().putEvent(alarm);
 			}
 			catch (IOException e)
@@ -73,8 +73,10 @@ public class CentralPropertySensorListenerThread implements Runnable
 		bufferString = ms.decrypt(bufferString);
 		dataBuffer =bufferString.split(";");
 
-		if (isValidHash(dataBuffer, bufferString))
+		if (bufferString != null && isValidHash(dataBuffer, bufferString))
 		{
+			//System.out.println("The messages <" + bufferString + "> would be processed it has a valid hash" );
+			
 			alarm.setStartMillisecondsServer(currentDate.getTime());
 			alarm.setIdProperty(dataBuffer[0]);
 			alarm.setIdSensor(dataBuffer[1]);
@@ -89,7 +91,7 @@ public class CentralPropertySensorListenerThread implements Runnable
 		}
 		else
 		{
-			System.out.println("Can't process this shit!");
+			//System.out.println("Can't process <" + bufferString + "> the hash is not valid" );
 			return null;
 		}
 

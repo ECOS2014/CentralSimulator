@@ -16,7 +16,7 @@ public class AdminWriter implements Runnable, IStoppable{
 			if(line!=null)
 				writer.Write(line,"./data/log.txt");
 			if(milliseconds!=null)
-				writer.Write(milliseconds,"./data/logMilliseconds.txt");
+				writer.Write(milliseconds,"../logMilliseconds.txt");
 		}
 
 	}
